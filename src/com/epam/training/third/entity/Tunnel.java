@@ -5,14 +5,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Tunnel {
     private static Tunnel instance = null;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
-    public static int count = 0;
 
     private Tunnel() {}
 
     public static Tunnel getInstance() {
         if (instanceCounter.incrementAndGet() < 3) {
             instance = new Tunnel();
-            count++;
         }
         return instance;
     }
@@ -23,6 +21,6 @@ public class Tunnel {
 
     @Override
     public String toString() {
-        return "Tunnel{} " + count;
+        return "Tunnel{} ";
     }
 }
