@@ -8,11 +8,11 @@ public class Main {
         TunnelCreator1 t1 = new TunnelCreator1();
         TunnelCreator2 t2 = new TunnelCreator2();
         t1.start();
-        t1.interrupt();
+        //t1.interrupt();
         t1.run();
         t2.start();
-        //t2.run();
-        //t2.run();
+        t2.run();
+        t2.run();
     }
 
 }
