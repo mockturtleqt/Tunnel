@@ -11,7 +11,6 @@ import static com.epam.third.entity.ConstantHolder.FRONT_DIRECTION;
 import static com.epam.third.entity.ConstantHolder.MAX_INSTANCE_NUMBER;
 
 public class SemaphoreController {
-    public static ArrayDeque<Train> trainArrayDeque = new ArrayDeque<>();
 
     public static boolean isTunnelEmpty() {
         return (Tunnel.getInstance().getFrontEntrance().availablePermits() == MAX_INSTANCE_NUMBER &&

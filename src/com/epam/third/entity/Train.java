@@ -18,19 +18,25 @@ public class Train extends Thread {
     private int direction;
 
     public void run() {
-        if (SemaphoreController.canRun(this)) {
+        while (!SemaphoreController.canRun(this)) {
             try {
-                SemaphoreController.getSemaphore(this).acquire();
-                System.out.println("Train " + name + " " + direction);
-                TimeUnit.SECONDS.sleep(3);
+                TimeUnit.MICROSECONDS.sleep(100);
             } catch (InterruptedException e) {
                 logger.error(e);
-            } finally {
-                SemaphoreController.getSemaphore(this).release();
             }
         }
-        else {
-            SemaphoreController.trainArrayDeque.add(this);
+        try {
+            //SemaphoreController.getSemaphore(this).acquire();
+            Tunnel.getInstance().getBackEntrance().acquire();
+            Tunnel.getInstance().getFrontEntrance().acquire();
+            System.out.println("Train " + name + " " + direction);
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            logger.error(e);
+        } finally {
+            //SemaphoreController.getSemaphore(this).release();
+            Tunnel.getInstance().getBackEntrance().release();
+            Tunnel.getInstance().getFrontEntrance().release();
         }
     }
 
