@@ -1,8 +1,9 @@
-package com.epam.third.action;
+package com.epam.third.controller;
 
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
 
+import java.util.ArrayDeque;
 import java.util.concurrent.Semaphore;
 
 import static com.epam.third.entity.ConstantHolder.BACK_DIRECTION;
@@ -10,6 +11,8 @@ import static com.epam.third.entity.ConstantHolder.FRONT_DIRECTION;
 import static com.epam.third.entity.ConstantHolder.MAX_INSTANCE_NUMBER;
 
 public class SemaphoreController {
+    public static ArrayDeque<Train> trainArrayDeque = new ArrayDeque<>();
+
     public static boolean isTunnelEmpty() {
         return (Tunnel.getInstance().getFrontEntrance().availablePermits() == MAX_INSTANCE_NUMBER &&
                 Tunnel.getInstance().getBackEntrance().availablePermits() == MAX_INSTANCE_NUMBER);
@@ -25,7 +28,7 @@ public class SemaphoreController {
                 BACK_DIRECTION;
     }
 
-    public static boolean isTrainWaintingOnTheOtherSide(Train train) {
+    public static boolean isTrainWaitingOnTheOtherSide(Train train) {
         return (train.getDirection() == FRONT_DIRECTION) ?
                 Tunnel.getInstance().getFrontEntrance().hasQueuedThreads():
                 Tunnel.getInstance().getBackEntrance().hasQueuedThreads();
@@ -34,7 +37,7 @@ public class SemaphoreController {
     public static boolean canRun(Train train) {
         return (isTunnelEmpty() ||
                 (!isTunnelEmpty() && (isDirectionSame(train) && (Train.getCounter() < 3) ||
-                                        !(isTrainWaintingOnTheOtherSide(train)))));
+                                        !(isTrainWaitingOnTheOtherSide(train)))));
     }
 
     public static Semaphore getSemaphore(Train train) {
