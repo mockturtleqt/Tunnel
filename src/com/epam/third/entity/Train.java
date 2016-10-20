@@ -1,6 +1,6 @@
 package com.epam.third.entity;
 
-import com.epam.third.controller.TunnelManager;
+import com.epam.third.service.TunnelManager;
 import org.apache.log4j.Logger;
 
 import java.time.LocalTime;

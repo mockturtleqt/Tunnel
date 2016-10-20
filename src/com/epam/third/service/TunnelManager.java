@@ -1,4 +1,4 @@
-package com.epam.third.controller;
+package com.epam.third.service;
 
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
