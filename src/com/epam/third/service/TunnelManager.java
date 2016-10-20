@@ -29,11 +29,10 @@ public class TunnelManager {
                 tunnel.incrementCounter();
             } else {
                 tunnel.setCounterToZero();
+                tunnel.setLastTrainDirection(train.getDirection());
             }
-            tunnel.setLastTrainDirection(train.getDirection());
             System.out.println("Train " + train.getTrainName() + "; " +
                     " dir " + train.getDirection() + "; " +
-                    " tunnel dir " + tunnel.getLastTrainDirection() + "; " +
                     " count = " + tunnel.getTrainCounter() + "; " +
                     " " + LocalTime.now());
 
@@ -52,6 +51,6 @@ public class TunnelManager {
 
     private static boolean canEnterTunnel(Train train, Tunnel tunnel) {
         return (isTunnelEmpty(tunnel) ||
-                (!isTunnelEmpty(tunnel) && isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
+                (isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
     }
 }

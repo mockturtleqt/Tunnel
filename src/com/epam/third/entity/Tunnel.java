@@ -31,7 +31,7 @@ public class Tunnel {
     public void occupyTrail() {
         try {
             semaphore.acquire();
-            TimeUnit.SECONDS.sleep(3);
+            TimeUnit.SECONDS.sleep(1);
         } catch (InterruptedException e) {
             logger.error(e, e);
         }
