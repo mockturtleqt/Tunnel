@@ -3,19 +3,19 @@ package com.epam.third.entity;
 import com.epam.third.controller.SemaphoreController;
 import org.apache.log4j.Logger;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Train extends Thread {
     private static Logger logger = Logger.getLogger(Train.class);
-    private static AtomicInteger counter = new AtomicInteger(0);
+    private int direction;
     private String name;
 
     public Train(String name) {
         this.name = name;
     }
-
-    private int direction;
 
     public void run() {
         while (!SemaphoreController.canRun(this)) {
@@ -26,22 +26,28 @@ public class Train extends Thread {
             }
         }
         try {
-            //SemaphoreController.getSemaphore(this).acquire();
-            Tunnel.getInstance().getBackEntrance().acquire();
-            Tunnel.getInstance().getFrontEntrance().acquire();
-            System.out.println("Train " + name + " " + direction);
+            TunnelManager.getResource();
             TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            logger.error(e);
-        } finally {
-            //SemaphoreController.getSemaphore(this).release();
-            Tunnel.getInstance().getBackEntrance().release();
-            Tunnel.getInstance().getFrontEntrance().release();
-        }
-    }
 
-    public static int getCounter() {
-        return counter.get();
+            if (TunnelManager.getLastTrainDirection() == this.getDirection()) {
+                TunnelManager.incrementCounter();
+            }
+            else {
+                TunnelManager.setCounterToZero();
+            }
+            TunnelManager.setLastTrainDirection(this.getDirection());
+            System.out.println("Train num " + name +
+                                " dir " + direction +
+                                " tunnel dir " + TunnelManager.getLastTrainDirection() +
+                                " count = " + TunnelManager.getCounter() +
+                                " " + LocalTime.now());
+
+        } catch (InterruptedException e) {
+            logger.error(e, e);
+        }
+        finally {
+            TunnelManager.returnResource();
+        }
     }
 
     public int getDirection() {

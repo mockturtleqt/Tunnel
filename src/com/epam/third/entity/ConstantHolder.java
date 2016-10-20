@@ -5,5 +5,6 @@ public class ConstantHolder {
     public static final int FRONT_DIRECTION = 0;
     public static final int BACK_DIRECTION = 1;
     public static final int EMPTY = 3;
+    public static final int POOL_SIZE = 2;
 
 }

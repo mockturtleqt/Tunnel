@@ -10,6 +10,10 @@ public class Tunnel {
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
     private Semaphore frontEntrance = new Semaphore(MAX_INSTANCE_NUMBER, true);
     private Semaphore backEntrance = new Semaphore(MAX_INSTANCE_NUMBER, true);
+    public static AtomicInteger trainCounter = new AtomicInteger(0);
+
+
+    public static int lastTrainDirection;
 
     private Tunnel() {}
 
