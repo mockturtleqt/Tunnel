@@ -6,11 +6,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.epam.third.entity.ConstantHolder.POOL_SIZE;
+import static com.epam.third.entity.ConstantHolder.TRAIL_COUNT;
 
 public class TunnelManager {
     private static Logger logger = Logger.getLogger(TunnelManager.class);
-    private static Semaphore semaphore = new Semaphore(POOL_SIZE, true);
+    private static Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
     private static AtomicInteger counter = new AtomicInteger(0);
     private static int lastTrainDirection;
 
