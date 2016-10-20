@@ -14,7 +14,7 @@ public class Tunnel {
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
     private Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
     private AtomicInteger trainCounter = new AtomicInteger(0);
-    private TrainDirection lastTrainDirection;
+    private TrainDirection lastTrainDirection = TrainDirection.BACK;
     private int id;
 
     private Tunnel(int id) {

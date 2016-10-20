@@ -2,8 +2,13 @@ package com.epam.third.service;
 
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
+import org.apache.log4j.Logger;
+
+import java.time.LocalTime;
+import java.util.concurrent.TimeUnit;
 
 public class TunnelManager {
+    private static Logger logger = Logger.getLogger(TunnelManager.class);
     private static final int TRAIL_COUNT = 2;
     private static final int MAX_TRAINS_IN_A_ROW = 3;
 
@@ -22,12 +27,32 @@ public class TunnelManager {
                 (!isTunnelEmpty(tunnel) && isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
     }
 
-    public static boolean canRun(Train train) {
-        return (canEnterTunnel(train, tunnel));
-    }
+    public static void processTrain(Train train) {
+        while (!canEnterTunnel(train, tunnel)) {
+            try {
+                TimeUnit.MICROSECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                logger.error(e);
+            }
+        }
+        try {
+            tunnel.occupyTrail();
 
-    public static Tunnel getTunnel() {
-        return tunnel;
+            if (tunnel.getLastTrainDirection().equals(train.getDirection())) {
+                tunnel.incrementCounter();
+            } else {
+                tunnel.setCounterToZero();
+            }
+            tunnel.setLastTrainDirection(train.getDirection());
+            System.out.println("Train num " + train.getName() +
+                    " dir " + train.getDirection() +
+                    " tunnel dir " + tunnel.getLastTrainDirection() +
+                    " count = " + tunnel.getTrainCounter() +
+                    " " + tunnel + " " + LocalTime.now());
+
+        } finally {
+            tunnel.releaseTrail();
+        }
     }
 
 }
