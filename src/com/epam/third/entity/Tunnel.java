@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tunnel {
     public static final int TRAIL_COUNT = 2;
+    public static final int MAX_INSTANCE_NUMBER = 1;
     private static Logger logger = Logger.getLogger(Tunnel.class);
     private static Tunnel instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
@@ -21,7 +22,7 @@ public class Tunnel {
     }
 
     public static Tunnel getInstance(int id) {
-        if (instanceCounter.getAndIncrement() < 2) {
+        if (instanceCounter.getAndIncrement() < MAX_INSTANCE_NUMBER) {
             instance = new Tunnel(id);
         }
         return instance;

@@ -26,7 +26,7 @@ public class Train extends Thread {
             }
         }
         try {
-            tunnel = TunnelManager.getAvailableTunnel(this);
+            tunnel = TunnelManager.getTunnel();
             tunnel.occupyTrail();
 
             if (tunnel.getLastTrainDirection() == this.getDirection()) {
