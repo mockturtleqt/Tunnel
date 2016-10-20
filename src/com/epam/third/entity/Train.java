@@ -12,13 +12,15 @@ public class Train extends Thread {
     private static Logger logger = Logger.getLogger(Train.class);
     private int direction;
     private String name;
+    private Tunnel tunnel;
 
-    public Train(String name) {
+    public Train(String name, Tunnel tunnel) {
         this.name = name;
+        this.tunnel = tunnel;
     }
 
     public void run() {
-        while (!SemaphoreController.canRun(this)) {
+        while (!SemaphoreController.canRun(this, tunnel)) {
             try {
                 TimeUnit.MICROSECONDS.sleep(100);
             } catch (InterruptedException e) {
@@ -26,27 +28,22 @@ public class Train extends Thread {
             }
         }
         try {
-            TunnelManager.getResource();
-            TimeUnit.SECONDS.sleep(3);
+            tunnel.occupyTrail();
 
-            if (TunnelManager.getLastTrainDirection() == this.getDirection()) {
-                TunnelManager.incrementCounter();
+            if (tunnel.getLastTrainDirection() == this.getDirection()) {
+                Tunnel.getInstance().incrementCounter();
+            } else {
+                tunnel.setCounterToZero();
             }
-            else {
-                TunnelManager.setCounterToZero();
-            }
-            TunnelManager.setLastTrainDirection(this.getDirection());
+            tunnel.setLastTrainDirection(this.getDirection());
             System.out.println("Train num " + name +
-                                " dir " + direction +
-                                " tunnel dir " + TunnelManager.getLastTrainDirection() +
-                                " count = " + TunnelManager.getCounter() +
-                                " " + LocalTime.now());
-
-        } catch (InterruptedException e) {
-            logger.error(e, e);
+                    " dir " + direction +
+                    " tunnel dir " + tunnel.getLastTrainDirection() +
+                    " count = " + tunnel.getTrainCounter() +
+                    " " + LocalTime.now());
         }
         finally {
-            TunnelManager.returnResource();
+            tunnel.releaseTrail();
         }
     }
 

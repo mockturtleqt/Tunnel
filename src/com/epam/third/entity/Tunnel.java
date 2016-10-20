@@ -1,19 +1,20 @@
 package com.epam.third.entity;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
+import org.apache.log4j.Logger;
 
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import static com.epam.third.entity.ConstantHolder.MAX_INSTANCE_NUMBER;
+import static com.epam.third.entity.ConstantHolder.POOL_SIZE;
 
 public class Tunnel {
+    private static Logger logger = Logger.getLogger(Tunnel.class);
     private static Tunnel instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
-    private Semaphore frontEntrance = new Semaphore(MAX_INSTANCE_NUMBER, true);
-    private Semaphore backEntrance = new Semaphore(MAX_INSTANCE_NUMBER, true);
-    public static AtomicInteger trainCounter = new AtomicInteger(0);
-
-
-    public static int lastTrainDirection;
+    private Semaphore semaphore = new Semaphore(POOL_SIZE, true);
+    private AtomicInteger trainCounter = new AtomicInteger(0);
+    private int lastTrainDirection;
 
     private Tunnel() {}
 
@@ -24,16 +25,45 @@ public class Tunnel {
         return instance;
     }
 
-    public static AtomicInteger getInstanceCounter() {
-        return instanceCounter;
+    public void occupyTrail() {
+        try {
+            semaphore.acquire();
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            logger.error(e, e);
+        }
     }
 
-    public Semaphore getFrontEntrance() {
-        return frontEntrance;
+    public void releaseTrail() {
+        semaphore.release();
     }
 
-    public Semaphore getBackEntrance() {
-        return backEntrance;
+    public Semaphore getSemaphore() {
+        return semaphore;
+    }
+
+    public void setSemaphore(Semaphore semaphore) {
+        this.semaphore = semaphore;
+    }
+
+    public int getLastTrainDirection() {
+        return lastTrainDirection;
+    }
+
+    public AtomicInteger getTrainCounter() {
+        return trainCounter;
+    }
+
+    public void incrementCounter() {
+        trainCounter.getAndIncrement();
+    }
+
+    public void setCounterToZero() {
+        trainCounter.set(0);
+    }
+
+    public void setLastTrainDirection(int lastTrainDirection) {
+        this.lastTrainDirection = lastTrainDirection;
     }
 
     @Override
