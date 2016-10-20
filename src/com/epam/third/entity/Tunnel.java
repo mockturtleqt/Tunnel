@@ -5,7 +5,7 @@ import org.apache.log4j.Logger;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import static com.epam.third.entity.ConstantHolder.MAX_INSTANCE_NUMBER;
+
 import static com.epam.third.entity.ConstantHolder.POOL_SIZE;
 
 public class Tunnel {
@@ -16,7 +16,8 @@ public class Tunnel {
     private AtomicInteger trainCounter = new AtomicInteger(0);
     private int lastTrainDirection;
 
-    private Tunnel() {}
+    private Tunnel() {
+    }
 
     public static Tunnel getInstance() {
         if (instanceCounter.getAndIncrement() < 1) {
@@ -68,6 +69,6 @@ public class Tunnel {
 
     @Override
     public String toString() {
-        return "Tunnel{} " ;
+        return "Tunnel{} ";
     }
 }

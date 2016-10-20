@@ -3,10 +3,8 @@ package com.epam.third.entity;
 import com.epam.third.controller.SemaphoreController;
 import org.apache.log4j.Logger;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Train extends Thread {
     private static Logger logger = Logger.getLogger(Train.class);
@@ -36,13 +34,13 @@ public class Train extends Thread {
                 tunnel.setCounterToZero();
             }
             tunnel.setLastTrainDirection(this.getDirection());
+
             System.out.println("Train num " + name +
                     " dir " + direction +
                     " tunnel dir " + tunnel.getLastTrainDirection() +
                     " count = " + tunnel.getTrainCounter() +
                     " " + LocalTime.now());
-        }
-        finally {
+        } finally {
             tunnel.releaseTrail();
         }
     }
