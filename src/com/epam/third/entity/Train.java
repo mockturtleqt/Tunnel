@@ -12,7 +12,7 @@ public class Train extends Thread {
     private String name;
     private Tunnel tunnel;
 
-    public Train(String name , TrainDirection direction) {
+    public Train(String name, TrainDirection direction) {
         this.name = name;
         this.direction = direction;
     }
