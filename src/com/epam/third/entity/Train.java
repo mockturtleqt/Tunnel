@@ -31,7 +31,7 @@ public class Train extends Thread {
             tunnel.occupyTrail();
 
             if (tunnel.getLastTrainDirection() == this.getDirection()) {
-                Tunnel.getInstance().incrementCounter();
+                tunnel.incrementCounter();
             } else {
                 tunnel.setCounterToZero();
             }
