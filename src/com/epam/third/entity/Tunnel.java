@@ -6,9 +6,8 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.epam.third.entity.ConstantHolder.TRAIL_COUNT;
-
 public class Tunnel {
+    public static final int TRAIL_COUNT = 2;
     private static Logger logger = Logger.getLogger(Tunnel.class);
     private static Tunnel instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);

@@ -3,10 +3,11 @@ package com.epam.third.controller;
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
 
-import static com.epam.third.entity.ConstantHolder.MAX_TRAINS_IN_A_ROW;
-import static com.epam.third.entity.ConstantHolder.TRAIL_COUNT;
 
 public class SemaphoreController {
+    public static final int TRAIL_COUNT = 2;
+    public static final int MAX_TRAINS_IN_A_ROW = 3;
+
     private static Tunnel tunnel1 = Tunnel.getInstance(1);
     private static Tunnel tunnel2 = Tunnel.getInstance(2);
 
