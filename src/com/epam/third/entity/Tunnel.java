@@ -7,23 +7,23 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tunnel {
-    private static final int TRAIL_COUNT = 2;
-    private static final int MAX_INSTANCE_NUMBER = 1;
+    public static final int TRAIL_COUNT = 2;
+    public static final int MAX_INSTANCE_NUMBER = 1;
+    public static final int MAX_TRAINS_IN_A_ROW = 3;
+
     private static Logger logger = Logger.getLogger(Tunnel.class);
     private static Tunnel instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
     private Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
     private AtomicInteger trainCounter = new AtomicInteger(0);
     private TrainDirection lastTrainDirection = TrainDirection.BACK;
-    private int id;
 
-    private Tunnel(int id) {
-        this.id = id;
+    private Tunnel() {
     }
 
-    public static Tunnel getInstance(int id) {
+    public static Tunnel getInstance() {
         if (instanceCounter.getAndIncrement() < MAX_INSTANCE_NUMBER) {
-            instance = new Tunnel(id);
+            instance = new Tunnel();
         }
         return instance;
     }
@@ -71,6 +71,6 @@ public class Tunnel {
 
     @Override
     public String toString() {
-        return "Tunnel{" + id + "} ";
+        return "Tunnel{}";
     }
 }
