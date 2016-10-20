@@ -2,19 +2,22 @@ package com.epam.third.controller;
 
 
 import com.epam.third.entity.Train;
+import com.epam.third.entity.TrainDirection;
 import com.epam.third.entity.Tunnel;
+
+import static com.epam.third.entity.TrainDirection.BACK;
+import static com.epam.third.entity.TrainDirection.FRONT;
 
 public class Main {
     public static void main(String[] args) {
 
-        Tunnel tunnel = Tunnel.getInstance(1);
-        Train train1 = new Train("1", 1);
-        Train train2 = new Train("2", 1);
-        Train train3 = new Train("3", 1);
-        Train train4 = new Train("4", 1);
-        Train train5 = new Train("5", 1);
-        Train train6 = new Train("6", 1);
-        Train train7 = new Train("7", 0);
+        Train train1 = new Train("1", FRONT);
+        Train train2 = new Train("2", FRONT);
+        Train train3 = new Train("3", FRONT);
+        Train train4 = new Train("4", FRONT);
+        Train train5 = new Train("5", FRONT);
+        Train train6 = new Train("6", FRONT);
+        Train train7 = new Train("7", BACK);
         train1.start();
         train2.start();
         train3.start();

@@ -13,7 +13,7 @@ public class Tunnel {
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
     private Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
     private AtomicInteger trainCounter = new AtomicInteger(0);
-    private int lastTrainDirection;
+    private TrainDirection lastTrainDirection;
     private int id;
 
     private Tunnel(int id) {
@@ -48,7 +48,7 @@ public class Tunnel {
         this.semaphore = semaphore;
     }
 
-    public int getLastTrainDirection() {
+    public TrainDirection getLastTrainDirection() {
         return lastTrainDirection;
     }
 
@@ -64,7 +64,7 @@ public class Tunnel {
         trainCounter.set(0);
     }
 
-    public void setLastTrainDirection(int lastTrainDirection) {
+    public void setLastTrainDirection(TrainDirection lastTrainDirection) {
         this.lastTrainDirection = lastTrainDirection;
     }
 

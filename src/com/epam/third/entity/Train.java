@@ -8,11 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Train extends Thread {
     private static Logger logger = Logger.getLogger(Train.class);
-    private int direction;
+    private TrainDirection direction;
     private String name;
     private Tunnel tunnel;
 
-    public Train(String name , int direction) {
+    public Train(String name , TrainDirection direction) {
         this.name = name;
         this.direction = direction;
     }
@@ -46,11 +46,11 @@ public class Train extends Thread {
         }
     }
 
-    public int getDirection() {
+    public TrainDirection getDirection() {
         return direction;
     }
 
-    public void setDirection(int direction) {
+    public void setDirection(TrainDirection direction) {
         this.direction = direction;
     }
 }

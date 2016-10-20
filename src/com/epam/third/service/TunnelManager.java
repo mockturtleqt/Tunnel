@@ -15,7 +15,7 @@ public class TunnelManager {
     }
 
     public static boolean isDirectionSame(Train train, Tunnel tunnel) {
-        return (train.getDirection() == tunnel.getLastTrainDirection());
+        return (train.getDirection().equals(tunnel.getLastTrainDirection()));
     }
 
     public static boolean canEnterTunnel(Train train, Tunnel tunnel) {
