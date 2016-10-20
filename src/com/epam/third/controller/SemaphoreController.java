@@ -3,6 +3,7 @@ package com.epam.third.controller;
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
 
+import static com.epam.third.entity.ConstantHolder.MAX_TRAINS_IN_A_ROW;
 import static com.epam.third.entity.ConstantHolder.TRAIL_COUNT;
 
 public class SemaphoreController {
@@ -16,6 +17,6 @@ public class SemaphoreController {
 
     public static boolean canRun(Train train, Tunnel tunnel) {
         return (isTunnelEmpty(tunnel) ||
-                (!isTunnelEmpty(tunnel) && isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < 3)));
+                (!isTunnelEmpty(tunnel) && isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
     }
 }

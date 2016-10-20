@@ -6,5 +6,5 @@ public class ConstantHolder {
     public static final int BACK_DIRECTION = 1;
     public static final int EMPTY = 3;
     public static final int TRAIL_COUNT = 2;
-
+    public static final int MAX_TRAINS_IN_A_ROW = 3;
 }
