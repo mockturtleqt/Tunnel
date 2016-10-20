@@ -12,13 +12,12 @@ public class Train extends Thread {
     private String name;
     private Tunnel tunnel;
 
-    public Train(String name, Tunnel tunnel) {
+    public Train(String name) {
         this.name = name;
-        this.tunnel = tunnel;
     }
 
     public void run() {
-        while (!SemaphoreController.canRun(this, tunnel)) {
+        while (!SemaphoreController.canRun(this)) {
             try {
                 TimeUnit.MICROSECONDS.sleep(100);
             } catch (InterruptedException e) {
@@ -26,6 +25,7 @@ public class Train extends Thread {
             }
         }
         try {
+            tunnel = SemaphoreController.getAvailableTunnel(this);
             tunnel.occupyTrail();
 
             if (tunnel.getLastTrainDirection() == this.getDirection()) {
@@ -39,7 +39,7 @@ public class Train extends Thread {
                     " dir " + direction +
                     " tunnel dir " + tunnel.getLastTrainDirection() +
                     " count = " + tunnel.getTrainCounter() +
-                    " " + LocalTime.now());
+                    " " + tunnel + " " + LocalTime.now());
         } finally {
             tunnel.releaseTrail();
         }

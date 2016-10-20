@@ -15,13 +15,15 @@ public class Tunnel {
     private Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
     private AtomicInteger trainCounter = new AtomicInteger(0);
     private int lastTrainDirection;
+    private int id;
 
-    private Tunnel() {
+    private Tunnel(int id) {
+        this.id = id;
     }
 
-    public static Tunnel getInstance() {
-        if (instanceCounter.getAndIncrement() < 1) {
-            instance = new Tunnel();
+    public static Tunnel getInstance(int id) {
+        if (instanceCounter.getAndIncrement() < 2) {
+            instance = new Tunnel(id);
         }
         return instance;
     }
@@ -69,6 +71,6 @@ public class Tunnel {
 
     @Override
     public String toString() {
-        return "Tunnel{} ";
+        return "Tunnel{" + id + "} ";
     }
 }
