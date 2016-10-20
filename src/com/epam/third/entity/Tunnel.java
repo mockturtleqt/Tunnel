@@ -7,8 +7,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Tunnel {
-    public static final int TRAIL_COUNT = 2;
-    public static final int MAX_INSTANCE_NUMBER = 1;
+    private static final int TRAIL_COUNT = 2;
+    private static final int MAX_INSTANCE_NUMBER = 1;
     private static Logger logger = Logger.getLogger(Tunnel.class);
     private static Tunnel instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
