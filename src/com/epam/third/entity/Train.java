@@ -1,6 +1,6 @@
 package com.epam.third.entity;
 
-import com.epam.third.controller.SemaphoreController;
+import com.epam.third.controller.TunnelManager;
 import org.apache.log4j.Logger;
 
 import java.time.LocalTime;
@@ -12,12 +12,13 @@ public class Train extends Thread {
     private String name;
     private Tunnel tunnel;
 
-    public Train(String name) {
+    public Train(String name , int direction) {
         this.name = name;
+        this.direction = direction;
     }
 
     public void run() {
-        while (!SemaphoreController.canRun(this)) {
+        while (!TunnelManager.canRun(this)) {
             try {
                 TimeUnit.MICROSECONDS.sleep(100);
             } catch (InterruptedException e) {
@@ -25,7 +26,7 @@ public class Train extends Thread {
             }
         }
         try {
-            tunnel = SemaphoreController.getAvailableTunnel(this);
+            tunnel = TunnelManager.getAvailableTunnel(this);
             tunnel.occupyTrail();
 
             if (tunnel.getLastTrainDirection() == this.getDirection()) {

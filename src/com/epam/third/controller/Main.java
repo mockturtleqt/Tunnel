@@ -8,19 +8,13 @@ public class Main {
     public static void main(String[] args) {
 
         Tunnel tunnel = Tunnel.getInstance(1);
-        Train train1 = new Train("1");
-        train1.setDirection(1);
-        Train train2 = new Train("2");
-        train2.setDirection(1);
-        Train train3 = new Train("3");
-        train3.setDirection(1);
-        Train train4 = new Train("4");
-        train4.setDirection(1);
-        Train train5 = new Train("5");
-        train5.setDirection(1);
-        Train train6 = new Train("6");
-        train6.setDirection(1);
-        Train train7 = new Train("7");
+        Train train1 = new Train("1", 1);
+        Train train2 = new Train("2", 1);
+        Train train3 = new Train("3", 1);
+        Train train4 = new Train("4", 1);
+        Train train5 = new Train("5", 1);
+        Train train6 = new Train("6", 1);
+        Train train7 = new Train("7", 0);
         train1.start();
         train2.start();
         train3.start();
