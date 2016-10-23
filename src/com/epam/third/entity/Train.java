@@ -1,7 +1,5 @@
 package com.epam.third.entity;
 
-import java.time.LocalTime;
-
 public class Train extends Thread {
     private Tunnel tunnel;
     private int trainId;

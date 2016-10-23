@@ -14,24 +14,24 @@ public class TunnelManager {
     private static Logger logger = Logger.getLogger(TunnelManager.class);
     private static TunnelManager instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
-    private Tunnel tunnel1 = new Tunnel(1);
-    private Tunnel tunnel2 = new Tunnel(2);
     private Queue<Train> trains = new ArrayDeque<>();
+    private Queue<Tunnel> tunnels = new ArrayDeque<>();
 
-    private TunnelManager(Queue<Train> trains) {
+    private TunnelManager(Queue<Tunnel> tunnels, Queue<Train> trains) {
+        this.tunnels = tunnels;
         this.trains = trains;
     }
 
-    public static TunnelManager getInstance(Queue<Train> trains) {
+    public static TunnelManager getInstance(Queue<Tunnel> tunnels, Queue<Train> trains) {
         if (instanceCounter.getAndIncrement() < 1) {
-            instance = new TunnelManager(trains);
+            instance = new TunnelManager(tunnels, trains);
         }
         return instance;
     }
 
     public void processTrains() {
         for (Train train : trains) {
-            while (!canRun(train)) {
+            while (getAvailableTunnel(train) == null) {
                 try {
                     TimeUnit.MICROSECONDS.sleep(1);
                 } catch (InterruptedException e) {
@@ -43,12 +43,20 @@ public class TunnelManager {
         }
     }
 
-    private boolean canRun(Train train) {
-        return (canEnterTunnel(train, tunnel1) || canEnterTunnel(train, tunnel2));
-    }
 
+    //TODO make getAvailableTunnel readable and pretty
     private Tunnel getAvailableTunnel(Train train) {
-        return (canEnterTunnel(train, tunnel1)) ? tunnel1 : tunnel2;
+        boolean isAvailable;
+        Tunnel availableTunnel = null;
+
+        for (Tunnel tunnel : tunnels) {
+            isAvailable = canEnterTunnel(train, tunnel);
+            if (isAvailable) {
+                availableTunnel = tunnel;
+                break;
+            }
+        }
+        return availableTunnel;
     }
 
     private boolean isTunnelEmpty(Tunnel tunnel) {

@@ -2,6 +2,7 @@ package com.epam.third.controller;
 
 
 import com.epam.third.entity.Train;
+import com.epam.third.entity.Tunnel;
 import com.epam.third.service.TunnelManager;
 
 import java.util.ArrayDeque;
@@ -23,7 +24,11 @@ public class Main {
         trains.add(new Train(8, BACK));
         trains.add(new Train(9, BACK));
 
-        TunnelManager tunnelManager = TunnelManager.getInstance(trains);
+        Queue<Tunnel> tunnels = new ArrayDeque<>();
+        tunnels.add(new Tunnel(1));
+        tunnels.add(new Tunnel(2));
+
+        TunnelManager tunnelManager = TunnelManager.getInstance(tunnels, trains);
         tunnelManager.processTrains();
     }
 }
