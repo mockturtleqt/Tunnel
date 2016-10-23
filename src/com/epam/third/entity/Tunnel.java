@@ -22,14 +22,18 @@ public class Tunnel {
         this.tunnelId = id;
     }
 
-    public void occupyTunnel(Train train) {
+    public boolean occupyTunnel(Train train) {
         try {
             semaphore.acquire();
-            System.out.println("Train " + train.getTrainId() + " got tunnel " + this.getTunnelId() + " " + LocalTime.now());
-            TimeUnit.SECONDS.sleep(5);
+            if (!canEnterTunnel(train, this)) {
+                return false;
+            }
 
             trainCounter.getAndIncrement();
             priorityDirection = train.getDirection();
+
+            System.out.println("Train " + train.getTrainId() + " got tunnel " + this.getTunnelId() + " " + train.getDirection() + " " + LocalTime.now());
+            TimeUnit.SECONDS.sleep(5);
 
             if (trainCounter.get() > MAX_TRAINS_IN_A_ROW - 1) {
                 priorityDirection = (priorityDirection.equals(FRONT)) ? BACK : FRONT;
@@ -38,11 +42,12 @@ public class Tunnel {
         } catch (InterruptedException e) {
             logger.error(e);
         }
+        return true;
     }
 
     public void releaseTunnel(Train train) {
+        System.out.println("Train " + train.getTrainId() + " releases tunnel " + this.getTunnelId() + " " + train.getDirection() + " " + LocalTime.now());
         semaphore.release();
-        System.out.println("Train " + train.getTrainId() + " releases tunnel " + this.getTunnelId() + " " + LocalTime.now());
     }
 
     public Semaphore getSemaphore() {
@@ -59,5 +64,18 @@ public class Tunnel {
 
     public int getTunnelId() {
         return tunnelId;
+    }
+
+    private boolean isTunnelEmpty(Tunnel tunnel) {
+        return (tunnel.getSemaphore().availablePermits() == MAX_TRAINS_IN_A_ROW - 1);
+    }
+
+    private boolean isDirectionSame(Train train, Tunnel tunnel) {
+        return (train.getDirection().equals(tunnel.getPriorityDirection()));
+    }
+
+    private boolean canEnterTunnel(Train train, Tunnel tunnel) {
+        return (isTunnelEmpty(tunnel) ||
+                (isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
     }
 }
