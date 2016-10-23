@@ -37,9 +37,9 @@ public class Tunnel {
 
             System.out.println("Train " + train.getTrainId() + " got tunnel " + this.getTunnelId() +
                     " dir " + train.getDirection() + " " + LocalTime.now());
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(3);
 
-            if (trainCounter.get() > MAX_TRAINS_IN_A_ROW - 1) {
+            if (trainCounter.get() == MAX_TRAINS_IN_A_ROW) {
                 trainCounter.set(0);
             }
         } catch (InterruptedException e) {
