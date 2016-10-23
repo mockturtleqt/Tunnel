@@ -4,52 +4,62 @@ import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
 import org.apache.log4j.Logger;
 
-import java.time.LocalTime;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
-
-import static com.epam.third.entity.Tunnel.MAX_TRAINS_IN_A_ROW;
-import static com.epam.third.entity.Tunnel.TRAIL_COUNT;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TunnelManager {
+    private final int MAX_TRAINS_IN_A_ROW = 3;
     private static Logger logger = Logger.getLogger(TunnelManager.class);
-    private static Tunnel tunnel = Tunnel.getInstance();
+    private static TunnelManager instance;
+    private static AtomicInteger instanceCounter = new AtomicInteger(0);
+    private Tunnel tunnel1 = new Tunnel(1);
+    private Tunnel tunnel2 = new Tunnel(2);
+    private Queue<Train> trains = new ArrayDeque<>();
 
-    public static void processTrain(Train train) {
-        while (!canEnterTunnel(train, tunnel)) {
-            try {
-                TimeUnit.MICROSECONDS.sleep(100);
-            } catch (InterruptedException e) {
-                logger.error(e);
-            }
+    private TunnelManager(Queue<Train> trains) {
+        this.trains = trains;
+    }
+
+    public static TunnelManager getInstance(Queue<Train> trains) {
+        if (instanceCounter.getAndIncrement() < 1) {
+            instance = new TunnelManager(trains);
         }
-        try {
-            tunnel.occupyTrail();
+        return instance;
+    }
 
-            if (tunnel.getLastTrainDirection().equals(train.getDirection())) {
-                tunnel.incrementCounter();
-            } else {
-                tunnel.setCounterToZero();
-                tunnel.setLastTrainDirection(train.getDirection());
+    public void processTrains() {
+        for (Train train : trains) {
+            while (!canRun(train)) {
+                try {
+                    TimeUnit.MICROSECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    logger.error(e);
+                }
             }
-            System.out.println("Train " + train.getTrainName() + "; " +
-                    " dir " + train.getDirection() + "; " +
-                    " count = " + tunnel.getTrainCounter() + "; " +
-                    " " + LocalTime.now());
-
-        } finally {
-            tunnel.releaseTrail();
+            train.setTunnel(getAvailableTunnel(train));
+            train.start();
         }
     }
 
-    private static boolean isTunnelEmpty(Tunnel tunnel) {
-        return (tunnel.getSemaphore().availablePermits() == TRAIL_COUNT);
+    private boolean canRun(Train train) {
+        return (canEnterTunnel(train, tunnel1) || canEnterTunnel(train, tunnel2));
     }
 
-    private static boolean isDirectionSame(Train train, Tunnel tunnel) {
-        return (train.getDirection().equals(tunnel.getLastTrainDirection()));
+    private Tunnel getAvailableTunnel(Train train) {
+        return (canEnterTunnel(train, tunnel1)) ? tunnel1 : tunnel2;
     }
 
-    private static boolean canEnterTunnel(Train train, Tunnel tunnel) {
+    private boolean isTunnelEmpty(Tunnel tunnel) {
+        return (tunnel.getSemaphore().availablePermits() == MAX_TRAINS_IN_A_ROW);
+    }
+
+    private boolean isDirectionSame(Train train, Tunnel tunnel) {
+        return (train.getDirection().equals(tunnel.getPriorityDirection()));
+    }
+
+    private boolean canEnterTunnel(Train train, Tunnel tunnel) {
         return (isTunnelEmpty(tunnel) ||
                 (isDirectionSame(train, tunnel) && (tunnel.getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
     }

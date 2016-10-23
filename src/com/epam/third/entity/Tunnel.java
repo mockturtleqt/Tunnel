@@ -6,38 +6,39 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.epam.third.entity.TrainDirection.BACK;
+import static com.epam.third.entity.TrainDirection.FRONT;
+
 public class Tunnel {
-    public static final int TRAIL_COUNT = 2;
-    public static final int MAX_INSTANCE_NUMBER = 1;
-    public static final int MAX_TRAINS_IN_A_ROW = 3;
-
+    private final int MAX_TRAINS_IN_A_ROW = 3;
     private static Logger logger = Logger.getLogger(Tunnel.class);
-    private static Tunnel instance;
-    private static AtomicInteger instanceCounter = new AtomicInteger(0);
-    private Semaphore semaphore = new Semaphore(TRAIL_COUNT, true);
+    private final Semaphore semaphore = new Semaphore(MAX_TRAINS_IN_A_ROW, true);
+    private TrainDirection priorityDirection = BACK;
     private AtomicInteger trainCounter = new AtomicInteger(0);
-    private TrainDirection lastTrainDirection = TrainDirection.BACK;
+    private int tunnelId;
 
-    private Tunnel() {
+    public Tunnel(int id) {
+        this.tunnelId = id;
     }
 
-    public static Tunnel getInstance() {
-        if (instanceCounter.getAndIncrement() < MAX_INSTANCE_NUMBER) {
-            instance = new Tunnel();
-        }
-        return instance;
-    }
-
-    public void occupyTrail() {
+    public void occupyTunnel(Train train) {
         try {
             semaphore.acquire();
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(5);
+
+            trainCounter.getAndIncrement();
+            priorityDirection = train.getDirection();
+
+            if (trainCounter.get() > MAX_TRAINS_IN_A_ROW - 1) {
+                priorityDirection = (priorityDirection.equals(FRONT)) ? BACK : FRONT;
+                trainCounter.set(0);
+            }
         } catch (InterruptedException e) {
-            logger.error(e, e);
+            logger.error(e);
         }
     }
 
-    public void releaseTrail() {
+    public void releaseTunnel() {
         semaphore.release();
     }
 
@@ -45,32 +46,15 @@ public class Tunnel {
         return semaphore;
     }
 
-    public void setSemaphore(Semaphore semaphore) {
-        this.semaphore = semaphore;
-    }
-
-    public TrainDirection getLastTrainDirection() {
-        return lastTrainDirection;
+    public TrainDirection getPriorityDirection() {
+        return priorityDirection;
     }
 
     public AtomicInteger getTrainCounter() {
         return trainCounter;
     }
 
-    public void incrementCounter() {
-        trainCounter.getAndIncrement();
-    }
-
-    public void setCounterToZero() {
-        trainCounter.set(0);
-    }
-
-    public void setLastTrainDirection(TrainDirection lastTrainDirection) {
-        this.lastTrainDirection = lastTrainDirection;
-    }
-
-    @Override
-    public String toString() {
-        return "Tunnel{}";
+    public int getTunnelId() {
+        return tunnelId;
     }
 }

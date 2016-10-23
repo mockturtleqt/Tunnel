@@ -1,29 +1,32 @@
 package com.epam.third.entity;
 
-import com.epam.third.service.TunnelManager;
+import java.time.LocalTime;
 
 public class Train extends Thread {
+    private Tunnel tunnel;
+    private int trainId;
     private TrainDirection direction;
-    private String trainName;
 
-    public Train(String name, TrainDirection direction) {
-        this.trainName = name;
+    public Train(int id, TrainDirection direction) {
+        this.trainId = id;
         this.direction = direction;
     }
 
+    public void setTunnel(Tunnel tunnel) {
+        this.tunnel = tunnel;
+    }
+
     public void run() {
-        TunnelManager.processTrain(this);
+        try {
+            tunnel.occupyTunnel(this);
+            System.out.println("Train " + trainId + " got tunnel " + tunnel.getTunnelId() + " " + LocalTime.now());
+        } finally {
+            tunnel.releaseTunnel();
+            System.out.println("Train " + trainId + " releases tunnel " + tunnel.getTunnelId() + " " + LocalTime.now());
+        }
     }
 
     public TrainDirection getDirection() {
         return direction;
-    }
-
-    public void setDirection(TrainDirection direction) {
-        this.direction = direction;
-    }
-
-    public String getTrainName() {
-        return trainName;
     }
 }
