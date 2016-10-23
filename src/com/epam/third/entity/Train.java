@@ -19,14 +19,16 @@ public class Train extends Thread {
     public void run() {
         try {
             tunnel.occupyTunnel(this);
-            System.out.println("Train " + trainId + " got tunnel " + tunnel.getTunnelId() + " " + LocalTime.now());
         } finally {
-            tunnel.releaseTunnel();
-            System.out.println("Train " + trainId + " releases tunnel " + tunnel.getTunnelId() + " " + LocalTime.now());
+            tunnel.releaseTunnel(this);
         }
     }
 
     public TrainDirection getDirection() {
         return direction;
+    }
+
+    public int getTrainId() {
+        return trainId;
     }
 }

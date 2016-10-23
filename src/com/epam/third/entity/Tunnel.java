@@ -2,6 +2,7 @@ package com.epam.third.entity;
 
 import org.apache.log4j.Logger;
 
+import java.time.LocalTime;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,6 +25,7 @@ public class Tunnel {
     public void occupyTunnel(Train train) {
         try {
             semaphore.acquire();
+            System.out.println("Train " + train.getTrainId() + " got tunnel " + this.getTunnelId() + " " + LocalTime.now());
             TimeUnit.SECONDS.sleep(5);
 
             trainCounter.getAndIncrement();
@@ -38,8 +40,9 @@ public class Tunnel {
         }
     }
 
-    public void releaseTunnel() {
+    public void releaseTunnel(Train train) {
         semaphore.release();
+        System.out.println("Train " + train.getTrainId() + " releases tunnel " + this.getTunnelId() + " " + LocalTime.now());
     }
 
     public Semaphore getSemaphore() {
