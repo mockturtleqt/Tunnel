@@ -2,25 +2,22 @@ package com.epam.third.service;
 
 import com.epam.third.entity.Train;
 import com.epam.third.entity.Tunnel;
-import org.apache.log4j.Logger;
 
-import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class TunnelManager {
-    private static Logger logger = Logger.getLogger(TunnelManager.class);
     private static TunnelManager instance;
     private static AtomicInteger instanceCounter = new AtomicInteger(0);
     private Queue<Train> trains = new ArrayDeque<>();
-    private Queue<Tunnel> tunnels = new ArrayDeque<>();
+    private List<Tunnel> tunnels = new ArrayList<>();
 
-    private TunnelManager(Queue<Tunnel> tunnels, Queue<Train> trains) {
+    private TunnelManager(List<Tunnel> tunnels, Queue<Train> trains) {
         this.tunnels = tunnels;
         this.trains = trains;
     }
 
-    public static TunnelManager getInstance(Queue<Tunnel> tunnels, Queue<Train> trains) {
+    public static TunnelManager getInstance(List<Tunnel> tunnels, Queue<Train> trains) {
         if (instanceCounter.getAndIncrement() < 1) {
             instance = new TunnelManager(tunnels, trains);
         }
@@ -28,8 +25,10 @@ public class TunnelManager {
     }
 
     public void processTrains() {
+        Random random = new Random();
         for (Train train : trains) {
-            train.setTunnel(tunnels.peek());
+            Tunnel tunnel = tunnels.get(random.nextInt(tunnels.size()));
+            train.setTunnel(tunnel);
             train.start();
         }
     }

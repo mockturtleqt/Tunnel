@@ -6,6 +6,8 @@ import com.epam.third.entity.Tunnel;
 import com.epam.third.service.TunnelManager;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import static com.epam.third.entity.TrainDirection.BACK;
@@ -24,7 +26,7 @@ public class Main {
         trains.add(new Train(8, BACK));
         trains.add(new Train(9, BACK));
 
-        Queue<Tunnel> tunnels = new ArrayDeque<>();
+        List<Tunnel> tunnels = new ArrayList<>();
         tunnels.add(new Tunnel(1));
         tunnels.add(new Tunnel(2));
 
