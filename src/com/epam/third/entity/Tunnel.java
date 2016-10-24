@@ -84,8 +84,7 @@ public class Tunnel {
             canEnter = (isTunnelEmpty(train.getDirection()) ||
                     (isDirectionSame(train) && (getTrainCounter().get() < MAX_TRAINS_IN_A_ROW)));
             if (canEnter) {
-                trainCounter.getAndIncrement();
-                if (trainCounter.get() == MAX_TRAINS_IN_A_ROW) {
+                if (trainCounter.getAndIncrement() == MAX_TRAINS_IN_A_ROW) {
                     priorityDirection = (priorityDirection.equals(FRONT)) ? BACK : FRONT;
                 } else {
                     priorityDirection = train.getDirection();
@@ -107,5 +106,13 @@ public class Tunnel {
 
     public int getTunnelId() {
         return tunnelId;
+    }
+
+    @Override
+    public String toString() {
+        return "Tunnel{" +
+                "priorityDirection=" + priorityDirection +
+                ", tunnelId=" + tunnelId +
+                '}';
     }
 }
